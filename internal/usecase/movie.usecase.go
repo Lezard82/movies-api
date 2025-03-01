@@ -13,6 +13,10 @@ func NewMovieUseCase(repo repository.MovieRepository) *MovieUseCase {
 	return &MovieUseCase{Repo: repo}
 }
 
+func (uc *MovieUseCase) GetMovieByID(id int64) (*domain.Movie, error) {
+	return uc.Repo.GetByID(id)
+}
+
 func (uc *MovieUseCase) GetAllMovies() ([]domain.Movie, error) {
 	return uc.Repo.GetAll()
 }
