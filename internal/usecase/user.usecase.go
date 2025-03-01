@@ -13,6 +13,10 @@ func NewUserUseCase(repo repository.UserRepository) *UserUseCase {
 	return &UserUseCase{Repo: repo}
 }
 
+func (uc *UserUseCase) GetUserByID(id int64) (*domain.User, error) {
+	return uc.Repo.GetByID(id)
+}
+
 func (uc *UserUseCase) GetAllUsers() ([]domain.User, error) {
 	return uc.Repo.GetAll()
 }
