@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Lezard82/movies-api/internal/domain"
+	"github.com/Lezard82/movies-api/infrastructure/db/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -25,7 +25,7 @@ func InitDB() *gorm.DB {
 		log.Fatalf("Error connecting with database: %v", err)
 	}
 
-	err = database.AutoMigrate(&domain.Movie{}, &domain.User{})
+	err = database.AutoMigrate(&models.MovieModel{})
 	if err != nil {
 		log.Fatalf("Error in AutoMigrate: %v", err)
 		return nil
