@@ -11,6 +11,7 @@ func SetupRouter(movieHandler *handler.MovieHandler, authHandler *handler.AuthHa
 
 	SetupMoviesRoutes(r, movieHandler, jwt)
 	SetupAuthRouter(r, authHandler)
+	SetupSwaggerRouter(r)
 
 	return r
 }

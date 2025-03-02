@@ -1,0 +1,351 @@
+definitions:
+  domain.Movie:
+    properties:
+      cast:
+        items:
+          type: string
+        type: array
+      director:
+        type: string
+      genre:
+        type: string
+      id:
+        type: integer
+      release_date:
+        type: string
+      synopsis:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  dto.Auth:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dto.AuthResponse:
+    properties:
+      jsonWebToken:
+        type: string
+    type: object
+  dto.ErrorResponse:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+    type: object
+  dto.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  dto.Movie:
+    properties:
+      cast:
+        items:
+          type: string
+        type: array
+      director:
+        type: string
+      genre:
+        type: string
+      release_date:
+        type: string
+      synopsis:
+        type: string
+      title:
+        type: string
+    required:
+    - director
+    - release_date
+    - title
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs with an existing user
+      parameters:
+      - description: User login data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Auth'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Json Web Token
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: User login
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user
+      parameters:
+      - description: User registration data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Auth'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Register a user
+      tags:
+      - Auth
+  /movies:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves movies based on filters
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Title of the movie
+        in: query
+        name: title
+        type: string
+      - description: Genre of the movie
+        in: query
+        name: genre
+        type: string
+      - description: Release date of the movie
+        in: query
+        name: release_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Filtered movies
+          schema:
+            items:
+              $ref: '#/definitions/domain.Movie'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get movies
+      tags:
+      - movies
+    post:
+      consumes:
+      - application/json
+      description: Create a movie object with parameters
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Movie data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Movie'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: A complete movie
+          schema:
+            $ref: '#/definitions/domain.Movie'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create movie
+      tags:
+      - movies
+  /movies/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a movie based on ID
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Movie ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Movie deleted
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete movie
+      tags:
+      - movies
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a movie based on ID
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Movie ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Certain movie
+          schema:
+            $ref: '#/definitions/domain.Movie'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get movie
+      tags:
+      - movies
+    put:
+      consumes:
+      - application/json
+      description: Update a movie object with parameters
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Movie data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Movie'
+      - description: Movie ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: A complete movie
+          schema:
+            $ref: '#/definitions/domain.Movie'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update movie
+      tags:
+      - movies
+swagger: "2.0"
