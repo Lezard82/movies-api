@@ -14,9 +14,10 @@ func NewMovieRepository(database db.Database) *MovieRepositoryImpl {
 	return &MovieRepositoryImpl{database: database}
 }
 
-func (r *MovieRepositoryImpl) GetAll() ([]domain.Movie, error) {
+func (r *MovieRepositoryImpl) GetAll(filters map[string]interface{}) ([]domain.Movie, error) {
 	var movieModels []models.MovieModel
-	if err := r.database.Find(&movieModels); err != nil {
+
+	if err := r.database.Find(&movieModels, filters); err != nil {
 		return nil, err
 	}
 

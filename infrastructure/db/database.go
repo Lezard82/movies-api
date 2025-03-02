@@ -1,7 +1,7 @@
 package db
 
 type Database interface {
-	Find(dest interface{}) error
+	Find(dest interface{}, conditions map[string]interface{}) error
 	First(dest interface{}, id int64) error
 	FirstByField(dest interface{}, field string, value interface{}) error
 	CountByFields(model any, conditions map[string]interface{}, excludeID int64) (int64, error)

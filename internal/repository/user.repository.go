@@ -5,7 +5,7 @@ import (
 )
 
 type UserRepository interface {
-	GetAll() ([]domain.User, error)
+	GetAll(filters map[string]interface{}) ([]domain.User, error)
 	GetByID(id int64) (*domain.User, error)
 	GetByUsername(username string) (*domain.User, error)
 	Create(user *domain.User) error

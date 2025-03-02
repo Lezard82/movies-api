@@ -12,8 +12,19 @@ func NewGormDBAdapter(db *gorm.DB) *GormDBAdapter {
 	return &GormDBAdapter{DB: db}
 }
 
-func (g *GormDBAdapter) Find(dest interface{}) error {
-	return g.DB.Find(dest).Error
+func (g *GormDBAdapter) Find(dest interface{}, filters map[string]interface{}) error {
+	query := g.DB.Model(dest)
+
+	for field, value := range filters {
+		query = query.Where(field+" = ?", value)
+	}
+
+	err := query.Find(dest).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (g *GormDBAdapter) First(dest interface{}, id int64) error {

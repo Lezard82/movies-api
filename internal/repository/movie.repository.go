@@ -5,7 +5,7 @@ import (
 )
 
 type MovieRepository interface {
-	GetAll() ([]domain.Movie, error)
+	GetAll(filters map[string]interface{}) ([]domain.Movie, error)
 	GetByID(id int64) (*domain.Movie, error)
 	Create(movie *domain.Movie) error
 	Update(movie *domain.Movie) error

@@ -17,7 +17,20 @@ func NewMovieHandler(movieUseCase *usecase.MovieUseCase) *MovieHandler {
 }
 
 func (h *MovieHandler) GetAllMovies(c *gin.Context) {
-	movies, err := h.movieUseCase.GetAllMovies()
+	filters := make(map[string]interface{})
+	if title := c.Query("title"); title != "" {
+		filters["title"] = title
+	}
+
+	if releaseDate := c.Query("release_date"); releaseDate != "" {
+		filters["release_date"] = releaseDate
+	}
+
+	if genre := c.Query("genre"); genre != "" {
+		filters["genre"] = genre
+	}
+
+	movies, err := h.movieUseCase.GetAllMovies(filters)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

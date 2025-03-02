@@ -26,8 +26,8 @@ func (uc *UserUseCase) GetUserByUsername(username string) (*domain.User, error) 
 	return uc.Repo.GetByUsername(username)
 }
 
-func (uc *UserUseCase) GetAllUsers() ([]domain.User, error) {
-	return uc.Repo.GetAll()
+func (uc *UserUseCase) GetAllUsers(filters map[string]interface{}) ([]domain.User, error) {
+	return uc.Repo.GetAll(filters)
 }
 
 func (uc *UserUseCase) RegisterUser(user *domain.User) error {

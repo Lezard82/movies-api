@@ -19,8 +19,12 @@ func (uc *MovieUseCase) GetMovieByID(id int64) (*domain.Movie, error) {
 	return uc.Repo.GetByID(id)
 }
 
-func (uc *MovieUseCase) GetAllMovies() ([]domain.Movie, error) {
-	return uc.Repo.GetAll()
+func (uc *MovieUseCase) GetAllMovies(filters map[string]interface{}) ([]domain.Movie, error) {
+	movies, err := uc.Repo.GetAll(filters)
+	if err != nil {
+		return nil, err
+	}
+	return movies, nil
 }
 
 func (uc *MovieUseCase) CreateMovie(movie *domain.Movie) error {

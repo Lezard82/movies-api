@@ -44,9 +44,9 @@ func (r *UserRepositoryImpl) Update(user *domain.User) error {
 	return nil
 }
 
-func (r *UserRepositoryImpl) GetAll() ([]domain.User, error) {
+func (r *UserRepositoryImpl) GetAll(filters map[string]interface{}) ([]domain.User, error) {
 	var userModels []models.UserModel
-	if err := r.database.Find(&userModels); err != nil {
+	if err := r.database.Find(&userModels, filters); err != nil {
 		return nil, err
 	}
 
