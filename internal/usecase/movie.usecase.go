@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/Lezard82/movies-api/internal/domain"
 	"github.com/Lezard82/movies-api/internal/repository"
 )
@@ -22,10 +24,28 @@ func (uc *MovieUseCase) GetAllMovies() ([]domain.Movie, error) {
 }
 
 func (uc *MovieUseCase) CreateMovie(movie *domain.Movie) error {
+	exists, err := uc.Repo.Exists(movie, movie.ID)
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		return errors.New("a movie with the same title, director and release_date already exists")
+	}
+
 	return uc.Repo.Create(movie)
 }
 
 func (uc *MovieUseCase) UpdateMovie(movie *domain.Movie) error {
+	exists, err := uc.Repo.Exists(movie, movie.ID)
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		return errors.New("a movie with the same title, director and release_date already exists")
+	}
+
 	return uc.Repo.Update(movie)
 }
 

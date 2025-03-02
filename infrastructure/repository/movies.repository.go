@@ -63,3 +63,18 @@ func (r *MovieRepositoryImpl) Update(movie *domain.Movie) error {
 func (r *MovieRepositoryImpl) Delete(id int64) error {
 	return r.database.Delete(&models.MovieModel{}, id)
 }
+
+func (r *MovieRepositoryImpl) Exists(movie *domain.Movie, excludeID int64) (bool, error) {
+	conditions := map[string]interface{}{
+		"title":        movie.Title,
+		"director":     movie.Director,
+		"release_date": movie.ReleaseDate,
+	}
+
+	count, err := r.database.CountByFields(&models.MovieModel{}, conditions, excludeID)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}

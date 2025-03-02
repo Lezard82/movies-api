@@ -19,6 +19,10 @@ type MovieModel struct {
 	User        UserModel `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
+func (MovieModel) TableName() string {
+	return "movies"
+}
+
 func FromDomainMovie(movie domain.Movie) *MovieModel {
 	cast, _ := utils.MarshalCast(movie.Cast)
 

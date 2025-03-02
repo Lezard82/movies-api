@@ -10,4 +10,5 @@ type MovieRepository interface {
 	Create(movie *domain.Movie) error
 	Update(movie *domain.Movie) error
 	Delete(id int64) error
+	Exists(movie *domain.Movie, excludeID int64) (bool, error)
 }

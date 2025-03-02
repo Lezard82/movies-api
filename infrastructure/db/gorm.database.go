@@ -35,3 +35,19 @@ func (g *GormDBAdapter) Save(value interface{}) error {
 func (g *GormDBAdapter) Delete(value interface{}, id int64) error {
 	return g.DB.Delete(value, id).Error
 }
+
+func (g *GormDBAdapter) CountByFields(model any, conditions map[string]interface{}, excludeID int64) (int64, error) {
+	var count int64
+
+	query := g.DB.Model(model)
+	for field, value := range conditions {
+		query = query.Where(field+" = ?", value)
+	}
+
+	if excludeID > 0 {
+		query = query.Where("id != ?", excludeID)
+	}
+
+	err := query.Count(&count).Error
+	return count, err
+}

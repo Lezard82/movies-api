@@ -11,6 +11,10 @@ type UserModel struct {
 	Movies   []MovieModel `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
 }
 
+func (UserModel) TableName() string {
+	return "users"
+}
+
 func FromDomainUser(user domain.User) *UserModel {
 	return &UserModel{
 		ID:       user.ID,
