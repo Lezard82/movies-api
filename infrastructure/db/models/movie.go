@@ -18,31 +18,25 @@ type MovieModel struct {
 	UserID      int64
 }
 
-func (m *MovieModel) FromDomain(movie domain.Movie) error {
-	cast, err := utils.MarshalCast(movie.Cast)
-	if err != nil {
-		return err
+func FromDomain(movie domain.Movie) *MovieModel {
+	cast, _ := utils.MarshalCast(movie.Cast)
+
+	return &MovieModel{
+		ID:          movie.ID,
+		Title:       movie.Title,
+		Director:    movie.Director,
+		ReleaseDate: movie.ReleaseDate,
+		Cast:        cast,
+		Genre:       movie.Genre,
+		Synopsis:    movie.Synopsis,
+		UserID:      movie.UserID,
 	}
-
-	m.ID = movie.ID
-	m.Title = movie.Title
-	m.Director = movie.Director
-	m.ReleaseDate = movie.ReleaseDate
-	m.Cast = cast
-	m.Genre = movie.Genre
-	m.Synopsis = movie.Synopsis
-	m.UserID = movie.UserID
-
-	return nil
 }
 
-func (m *MovieModel) ToDomain() (domain.Movie, error) {
-	cast, err := utils.UnmarshalCast(m.Cast)
-	if err != nil {
-		return domain.Movie{}, err
-	}
+func (m *MovieModel) ToDomain() *domain.Movie {
+	cast, _ := utils.UnmarshalCast(m.Cast)
 
-	return domain.Movie{
+	return &domain.Movie{
 		ID:          m.ID,
 		Title:       m.Title,
 		Director:    m.Director,
@@ -51,5 +45,5 @@ func (m *MovieModel) ToDomain() (domain.Movie, error) {
 		Genre:       m.Genre,
 		Synopsis:    m.Synopsis,
 		UserID:      m.UserID,
-	}, nil
+	}
 }

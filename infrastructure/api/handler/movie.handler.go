@@ -47,14 +47,19 @@ func (h *MovieHandler) GetMovieByID(c *gin.Context) {
 }
 
 func (h *MovieHandler) CreateMovie(c *gin.Context) {
-	var movie domain.Movie
-
-	if err := c.ShouldBindJSON(&movie); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+	moviePtr, exists := c.Get("movie")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Movie data not found"})
 		return
 	}
 
-	if err := h.movieUseCase.CreateMovie(&movie); err != nil {
+	movie, ok := moviePtr.(*domain.Movie)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid movie data"})
+		return
+	}
+
+	if err := h.movieUseCase.CreateMovie(movie); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -70,16 +75,21 @@ func (h *MovieHandler) UpdateMovie(c *gin.Context) {
 		return
 	}
 
-	var movie domain.Movie
+	moviePtr, exists := c.Get("movie")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Movie data not found"})
+		return
+	}
 
-	if err := c.ShouldBindJSON(&movie); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+	movie, ok := moviePtr.(*domain.Movie)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid movie data"})
 		return
 	}
 
 	movie.ID = id
 
-	if err := h.movieUseCase.UpdateMovie(&movie); err != nil {
+	if err := h.movieUseCase.UpdateMovie(movie); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

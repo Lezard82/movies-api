@@ -22,11 +22,8 @@ func (r *MovieRepositoryImpl) GetAll() ([]domain.Movie, error) {
 
 	var movies []domain.Movie
 	for _, movieModel := range movieModels {
-		movie, err := movieModel.ToDomain()
-		if err != nil {
-			return nil, err
-		}
-		movies = append(movies, movie)
+		movie := movieModel.ToDomain()
+		movies = append(movies, *movie)
 	}
 
 	return movies, nil
@@ -38,20 +35,11 @@ func (r *MovieRepositoryImpl) GetByID(id int64) (*domain.Movie, error) {
 		return nil, err
 	}
 
-	movie, err := movieModel.ToDomain()
-	if err != nil {
-		return nil, err
-	}
-
-	return &movie, nil
+	return movieModel.ToDomain(), nil
 }
 
 func (r *MovieRepositoryImpl) Create(movie *domain.Movie) error {
-	movieModel := models.MovieModel{}
-
-	if err := movieModel.FromDomain(*movie); err != nil {
-		return err
-	}
+	movieModel := models.FromDomain(*movie)
 
 	if err := r.database.Create(movieModel); err != nil {
 		return err
@@ -61,11 +49,7 @@ func (r *MovieRepositoryImpl) Create(movie *domain.Movie) error {
 }
 
 func (r *MovieRepositoryImpl) Update(movie *domain.Movie) error {
-	movieModel := models.MovieModel{}
-
-	if err := movieModel.FromDomain(*movie); err != nil {
-		return err
-	}
+	movieModel := models.FromDomain(*movie)
 
 	if err := r.database.Save(movieModel); err != nil {
 		return err

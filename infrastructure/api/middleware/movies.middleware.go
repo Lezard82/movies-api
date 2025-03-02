@@ -23,7 +23,13 @@ func ValidateMovie() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("movie", movie)
+		if movie.ReleaseDate.IsZero() {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "ReleaseDate is required and must be valid"})
+			c.Abort()
+			return
+		}
+
+		c.Set("movie", &movie)
 		c.Next()
 	}
 }
