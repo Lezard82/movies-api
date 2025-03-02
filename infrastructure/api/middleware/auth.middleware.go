@@ -6,6 +6,7 @@ import (
 
 	"github.com/Lezard82/movies-api/infrastructure/security"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func AuthMiddleware(jwtService security.JWTService) gin.HandlerFunc {
@@ -30,6 +31,16 @@ func AuthMiddleware(jwtService security.JWTService) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
+			c.Abort()
+			return
+		}
+
+		userID := int64(claims["user_id"].(float64))
+		c.Set("user_id", userID)
 
 		c.Next()
 	}

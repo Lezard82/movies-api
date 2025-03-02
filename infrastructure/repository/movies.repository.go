@@ -45,6 +45,8 @@ func (r *MovieRepositoryImpl) Create(movie *domain.Movie) error {
 		return err
 	}
 
+	movie.ID = movieModel.ID
+
 	return nil
 }
 

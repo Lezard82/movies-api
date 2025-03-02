@@ -3,8 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/Lezard82/movies-api/infrastructure/utils"
-	"github.com/Lezard82/movies-api/internal/domain"
+	"github.com/Lezard82/movies-api/infrastructure/api/helpers"
 	"github.com/Lezard82/movies-api/internal/usecase"
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +18,6 @@ func NewMovieHandler(movieUseCase *usecase.MovieUseCase) *MovieHandler {
 
 func (h *MovieHandler) GetAllMovies(c *gin.Context) {
 	movies, err := h.movieUseCase.GetAllMovies()
-
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -29,15 +27,12 @@ func (h *MovieHandler) GetAllMovies(c *gin.Context) {
 }
 
 func (h *MovieHandler) GetMovieByID(c *gin.Context) {
-	id, err := utils.ParseID(c.Param("id"))
-
+	id, err := helpers.GetMovieID(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
 
 	movie, err := h.movieUseCase.GetMovieByID(id)
-
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Movie not found"})
 		return
@@ -47,17 +42,17 @@ func (h *MovieHandler) GetMovieByID(c *gin.Context) {
 }
 
 func (h *MovieHandler) CreateMovie(c *gin.Context) {
-	moviePtr, exists := c.Get("movie")
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Movie data not found"})
+	movie, err := helpers.GetMovieFromContext(c)
+	if err != nil {
 		return
 	}
 
-	movie, ok := moviePtr.(*domain.Movie)
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid movie data"})
+	userID, err := helpers.GetUserID(c)
+	if err != nil {
 		return
 	}
+
+	movie.UserID = userID
 
 	if err := h.movieUseCase.CreateMovie(movie); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -68,26 +63,35 @@ func (h *MovieHandler) CreateMovie(c *gin.Context) {
 }
 
 func (h *MovieHandler) UpdateMovie(c *gin.Context) {
-	id, err := utils.ParseID(c.Param("id"))
-
+	userID, err := helpers.GetUserID(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
 
-	moviePtr, exists := c.Get("movie")
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Movie data not found"})
+	id, err := helpers.GetMovieID(c)
+	if err != nil {
 		return
 	}
 
-	movie, ok := moviePtr.(*domain.Movie)
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid movie data"})
+	existingMovie, err := h.movieUseCase.GetMovieByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Movie not found"})
 		return
 	}
 
-	movie.ID = id
+	existingMovie.ID = id
+	if helpers.UnauthorizedMovie(existingMovie, userID) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not allowed to edit this movie"})
+		return
+	}
+
+	movie, err := helpers.GetMovieFromContext(c)
+	if err != nil {
+		return
+	}
+
+	movie.ID = existingMovie.ID
+	movie.UserID = existingMovie.UserID
 
 	if err := h.movieUseCase.UpdateMovie(movie); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -98,14 +102,28 @@ func (h *MovieHandler) UpdateMovie(c *gin.Context) {
 }
 
 func (h *MovieHandler) DeleteMovie(c *gin.Context) {
-	id, err := utils.ParseID(c.Param("id"))
-
+	userID, err := helpers.GetUserID(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
 
-	if err := h.movieUseCase.DeleteMovie(id); err != nil {
+	id, err := helpers.GetMovieID(c)
+	if err != nil {
+		return
+	}
+
+	movie, err := h.movieUseCase.GetMovieByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Movie not found"})
+		return
+	}
+
+	if helpers.UnauthorizedMovie(movie, userID) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not allowed to delete this movie"})
+		return
+	}
+
+	if err := h.movieUseCase.DeleteMovie(movie.ID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
