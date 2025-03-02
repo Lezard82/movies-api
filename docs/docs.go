@@ -63,7 +63,7 @@ const docTemplate = `{
         },
         "/auth/register": {
             "post": {
-                "description": "Registers a new user",
+                "description": "Registers a new user with 8 characters, an uppercase, a lowercase, a number and a special character @$!%*?\u0026#",
                 "consumes": [
                     "application/json"
                 ],

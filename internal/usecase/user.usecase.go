@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"errors"
+	"regexp"
+	"unicode"
 
 	"github.com/Lezard82/movies-api/infrastructure/security"
 	"github.com/Lezard82/movies-api/internal/domain"
@@ -36,6 +38,10 @@ func (uc *UserUseCase) RegisterUser(user *domain.User) error {
 		return err
 	}
 
+	if !validatePassword(user.Password) {
+		return errors.New("insecure password")
+	}
+
 	user.Password = hashedPassword
 	return uc.Repo.Create(user)
 }
@@ -64,4 +70,28 @@ func (uc *UserUseCase) UpdateUser(user *domain.User) error {
 
 func (uc *UserUseCase) DeleteUser(id int64) error {
 	return uc.Repo.Delete(id)
+}
+
+func validatePassword(password string) bool {
+	if len(password) < 8 {
+		return false
+	}
+
+	var hasUpper, hasLower, hasNumber, hasSpecial bool
+	specialChars := `@$!%*?&#`
+
+	for _, char := range password {
+		switch {
+		case unicode.IsUpper(char):
+			hasUpper = true
+		case unicode.IsLower(char):
+			hasLower = true
+		case unicode.IsDigit(char):
+			hasNumber = true
+		case regexp.MustCompile("[" + specialChars + "]").MatchString(string(char)):
+			hasSpecial = true
+		}
+	}
+
+	return hasUpper && hasLower && hasNumber && hasSpecial
 }

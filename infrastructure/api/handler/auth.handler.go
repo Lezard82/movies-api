@@ -18,7 +18,7 @@ func NewAuthHandler(userUseCase *usecase.UserUseCase) *AuthHandler {
 }
 
 // @Summary Register a user
-// @Description Registers a new user
+// @Description Registers a new user with 8 characters, an uppercase, a lowercase, a number and a special character @$!%*?&#
 // @Tags Auth
 // @Accept  json
 // @Produce  json

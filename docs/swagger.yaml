@@ -105,7 +105,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: Registers a new user
+      description: Registers a new user with 8 characters, an uppercase, a lowercase,
+        a number and a special character @$!%*?&#
       parameters:
       - description: User registration data
         in: body
