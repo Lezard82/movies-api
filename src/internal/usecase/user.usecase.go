@@ -5,9 +5,9 @@ import (
 	"regexp"
 	"unicode"
 
-	"github.com/Lezard82/movies-api/infrastructure/security"
-	"github.com/Lezard82/movies-api/internal/domain"
-	"github.com/Lezard82/movies-api/internal/repository"
+	"github.com/Lezard82/movies-api/src/infrastructure/security"
+	"github.com/Lezard82/movies-api/src/internal/domain"
+	"github.com/Lezard82/movies-api/src/internal/repository"
 )
 
 type UserUseCase struct {

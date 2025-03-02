@@ -1,18 +1,34 @@
 # movies-api
-Technical assesment for backend developer possition at KenTech, S.L.U.
 
+Technical assesment for backend developer possition at KenTech, S.L.U.
 
 # project structure
 
 /movies-api
-│── /cmd                 # Punto de entrada de la aplicación
-│── /config              # Configuración del proyecto (variables de entorno, etc.)
+│── /config                         # Project configuration
+│── /docs                           # Swagger API documentation
+│── /infrastructure
+│   ├── / api
+|   |   |── / dto                   # Data Transfer Objects
+|   |   |── / handler               # Handlers
+|   |   |── / helpers               # Helpers
+|   |   |── / middleware            # Middlewares
+|   |   |── / router                # Routes
+|   |   |── server.go               # API entry point
+│   ├── / db
+|   |   |── / models                # GORM database models
+|   |   |── / database.go           # API database interface
+|   |   |── / gorm.connection.go    # GORM database connection
+|   |   |── / gorm.database.go      # GORM database implementation
+│   ├── / logger                    # Logger Singleton
+│   ├── / repository                # Infrastructure repositories
+│   ├── / security                  # Infrastructure security libraries
+│   ├── / utils                     # Infrastructure utility libraries
 │── /internal
-│   ├── /app             # Casos de uso (Aplicación - Lógica de negocio)
-│   ├── /domain          # Entidades y modelos del dominio
-│   ├── /infrastructure  # Implementaciones externas (DB, HTTP, APIs externas)
-│   ├── /interface       # Interfaces de los adaptadores
-│── /pkg                 # Paquetes reutilizables
-│── main.go              # Punto de entrada de la aplicación
-│── go.mod               # Módulo Go
-│── go.sum               # Dependencias
+│   ├── /domain                     # Domain entities
+│   ├── /repository                 # Domain repositories
+│   ├── /usecase                    # Domain use cases, business logic
+│── /tests
+│── main.go                         # Application entry point
+│── go.mod                          # Go module
+│── go.sum                          # Dependencies

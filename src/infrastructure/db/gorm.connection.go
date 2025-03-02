@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Lezard82/movies-api/infrastructure/db/models"
+	"github.com/Lezard82/movies-api/src/infrastructure/db/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

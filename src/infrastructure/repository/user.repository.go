@@ -3,9 +3,9 @@ package repository
 import (
 	"errors"
 
-	"github.com/Lezard82/movies-api/infrastructure/db"
-	"github.com/Lezard82/movies-api/infrastructure/db/models"
-	"github.com/Lezard82/movies-api/internal/domain"
+	"github.com/Lezard82/movies-api/src/infrastructure/db"
+	"github.com/Lezard82/movies-api/src/infrastructure/db/models"
+	"github.com/Lezard82/movies-api/src/internal/domain"
 )
 
 type UserRepositoryImpl struct {

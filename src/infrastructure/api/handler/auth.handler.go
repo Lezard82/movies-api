@@ -3,9 +3,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/Lezard82/movies-api/infrastructure/api/dto"
-	"github.com/Lezard82/movies-api/internal/domain"
-	"github.com/Lezard82/movies-api/internal/usecase"
+	"github.com/Lezard82/movies-api/src/infrastructure/api/dto"
+	"github.com/Lezard82/movies-api/src/internal/domain"
+	"github.com/Lezard82/movies-api/src/internal/usecase"
 	"github.com/gin-gonic/gin"
 )
 

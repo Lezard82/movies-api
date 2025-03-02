@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/Lezard82/movies-api/internal/domain"
+	"github.com/Lezard82/movies-api/src/internal/domain"
 )
 
 type UserModel struct {

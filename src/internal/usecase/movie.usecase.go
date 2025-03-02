@@ -3,8 +3,8 @@ package usecase
 import (
 	"errors"
 
-	"github.com/Lezard82/movies-api/internal/domain"
-	"github.com/Lezard82/movies-api/internal/repository"
+	"github.com/Lezard82/movies-api/src/internal/domain"
+	"github.com/Lezard82/movies-api/src/internal/repository"
 )
 
 type MovieUseCase struct {

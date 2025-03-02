@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/Lezard82/movies-api/internal/domain"
+	"github.com/Lezard82/movies-api/src/internal/domain"
 )
 
 type UserRepository interface {

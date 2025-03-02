@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Lezard82/movies-api/infrastructure/api/dto"
-	"github.com/Lezard82/movies-api/infrastructure/security"
+	"github.com/Lezard82/movies-api/src/infrastructure/api/dto"
+	"github.com/Lezard82/movies-api/src/infrastructure/security"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )

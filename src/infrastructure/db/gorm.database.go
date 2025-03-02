@@ -3,7 +3,7 @@ package db
 import (
 	"errors"
 
-	"github.com/Lezard82/movies-api/infrastructure/logger"
+	"github.com/Lezard82/movies-api/src/infrastructure/logger"
 	"gorm.io/gorm"
 )
 

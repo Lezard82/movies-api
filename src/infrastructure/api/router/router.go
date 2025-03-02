@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/Lezard82/movies-api/infrastructure/api/handler"
-	"github.com/Lezard82/movies-api/infrastructure/security"
+	"github.com/Lezard82/movies-api/src/infrastructure/api/handler"
+	"github.com/Lezard82/movies-api/src/infrastructure/security"
 	"github.com/gin-gonic/gin"
 )
 

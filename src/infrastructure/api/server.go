@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Lezard82/movies-api/infrastructure/api/handler"
-	"github.com/Lezard82/movies-api/infrastructure/api/router"
-	"github.com/Lezard82/movies-api/infrastructure/db"
-	"github.com/Lezard82/movies-api/infrastructure/repository"
-	"github.com/Lezard82/movies-api/infrastructure/security"
-	"github.com/Lezard82/movies-api/internal/usecase"
+	"github.com/Lezard82/movies-api/src/infrastructure/api/handler"
+	"github.com/Lezard82/movies-api/src/infrastructure/api/router"
+	"github.com/Lezard82/movies-api/src/infrastructure/db"
+	"github.com/Lezard82/movies-api/src/infrastructure/repository"
+	"github.com/Lezard82/movies-api/src/infrastructure/security"
+	"github.com/Lezard82/movies-api/src/internal/usecase"
 )
 
 func StartServer() {

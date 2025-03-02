@@ -3,8 +3,8 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/Lezard82/movies-api/infrastructure/api/dto"
-	"github.com/Lezard82/movies-api/internal/domain"
+	"github.com/Lezard82/movies-api/src/infrastructure/api/dto"
+	"github.com/Lezard82/movies-api/src/internal/domain"
 	"github.com/gin-gonic/gin"
 )
 
