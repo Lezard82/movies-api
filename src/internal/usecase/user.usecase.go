@@ -48,8 +48,8 @@ func (uc *UserUseCase) RegisterUser(user *domain.User) error {
 
 func (uc *UserUseCase) Authenticate(username string, password string) (string, error) {
 	user, err := uc.Repo.GetByUsername(username)
-	if err != nil {
-		return "", errors.New("invalid username or password - username")
+	if err != nil || user == nil {
+		return "", errors.New("invalid username or password")
 	}
 
 	if !uc.Hasher.CheckPassword(user.Password, password) {
