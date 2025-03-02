@@ -29,37 +29,51 @@ func (g *GormDBAdapter) Find(dest interface{}, filters map[string]interface{}) e
 
 	for field, value := range filters {
 		if !allowedFields[field] {
-			return errors.New("invalid filter field")
+			errMsg := "invalid filter field"
+			log.WithField("filters", filters).Error("Error executing Find: " + errMsg)
+			return errors.New(errMsg)
 		}
 		query = query.Where(field+" = ?", value)
 	}
 
 	err := query.Find(dest).Error
 	if err != nil {
+		log.WithField("error", err).Error("Error executing Find")
 		return err
 	}
 
+	log.Info("Find executed successfully")
 	return nil
 }
 
 func (g *GormDBAdapter) First(dest interface{}, id int64) error {
-	return g.DB.First(dest, id).Error
+	err := g.DB.First(dest, id).Error
+	logError("First", err, map[string]interface{}{"id": id})
+	return err
 }
 
 func (g *GormDBAdapter) FirstByField(dest interface{}, field string, value interface{}) error {
-	return g.DB.Where(field+" = ?", value).First(dest).Error
+	err := g.DB.Where(field+" = ?", value).First(dest).Error
+	logError("FirstByField", err, map[string]interface{}{"field": field, "value": value})
+	return err
 }
 
 func (g *GormDBAdapter) Create(value interface{}) error {
-	return g.DB.Create(value).Error
+	err := g.DB.Create(value).Error
+	logError("Create", err, nil)
+	return err
 }
 
 func (g *GormDBAdapter) Save(value interface{}) error {
-	return g.DB.Save(value).Error
+	err := g.DB.Save(value).Error
+	logError("Save", err, nil)
+	return err
 }
 
 func (g *GormDBAdapter) Delete(value interface{}, id int64) error {
-	return g.DB.Delete(value, id).Error
+	err := g.DB.Delete(value, id).Error
+	logError("Delete", err, map[string]interface{}{"id": id})
+	return err
 }
 
 func (g *GormDBAdapter) CountByFields(model any, conditions map[string]interface{}, excludeID int64) (int64, error) {
@@ -75,5 +89,17 @@ func (g *GormDBAdapter) CountByFields(model any, conditions map[string]interface
 	}
 
 	err := query.Count(&count).Error
+	logError("CountByFields", err, nil)
 	return count, err
+}
+
+func logError(operation string, err error, details map[string]interface{}) {
+	if err != nil {
+		log := logger.GetLogger()
+		entry := log.WithField("error", err).WithField("operation", operation)
+		for key, value := range details {
+			entry = entry.WithField(key, value)
+		}
+		entry.Error("Database operation failed")
+	}
 }
