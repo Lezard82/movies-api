@@ -60,7 +60,7 @@ Technical assesment for backend developer possition at KenTech, S.L.U.
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/movies-api.git
+    git clone https://github.com/Lezard82/movies-api.git
     cd movies-api
     ```
 
