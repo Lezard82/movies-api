@@ -8,12 +8,12 @@ import (
 )
 
 type MovieModel struct {
-	ID          int64 `gorm:"primaryKey"`
-	Title       string
-	Director    string
-	ReleaseDate time.Time
-	Cast        string `gorm:"type:TEXT"` // JSON string to store
-	Genre       string
+	ID          int64     `gorm:"primaryKey"`
+	Title       string    `gorm:"unique;not null"`
+	Director    string    `gorm:"not null"`
+	ReleaseDate time.Time `gorm:"not null"`
+	Cast        string    `gorm:"type:TEXT"` // JSON string to store
+	Genre       string    `gorm:"not null"`
 	Synopsis    string
 	UserID      int64     `gorm:"not null;index"` // Foreign key
 	User        UserModel `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
