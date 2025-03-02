@@ -51,12 +51,11 @@ func (h *AuthHandler) LoginUser(c *gin.Context) {
 		return
 	}
 
-	user, err := h.userUseCase.Authenticate(credentials.Username, credentials.Password)
+	token, err := h.userUseCase.Authenticate(credentials.Username, credentials.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	}
 
-	user.Password = ""
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }

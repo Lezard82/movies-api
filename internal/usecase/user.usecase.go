@@ -9,12 +9,13 @@ import (
 )
 
 type UserUseCase struct {
-	Repo   repository.UserRepository
-	Hasher security.PasswordHasher
+	Repo       repository.UserRepository
+	Hasher     security.PasswordHasher
+	JWTService security.JWTService
 }
 
-func NewUserUseCase(repo repository.UserRepository, hasher security.PasswordHasher) *UserUseCase {
-	return &UserUseCase{Repo: repo, Hasher: hasher}
+func NewUserUseCase(repo repository.UserRepository, hasher security.PasswordHasher, jwt security.JWTService) *UserUseCase {
+	return &UserUseCase{Repo: repo, Hasher: hasher, JWTService: jwt}
 }
 
 func (uc *UserUseCase) GetUserByID(id int64) (*domain.User, error) {
@@ -39,17 +40,22 @@ func (uc *UserUseCase) RegisterUser(user *domain.User) error {
 	return uc.Repo.Create(user)
 }
 
-func (uc *UserUseCase) Authenticate(username string, password string) (*domain.User, error) {
+func (uc *UserUseCase) Authenticate(username string, password string) (string, error) {
 	user, err := uc.Repo.GetByUsername(username)
 	if err != nil {
-		return nil, errors.New("invalid username or password")
+		return "", errors.New("invalid username or password - username")
 	}
 
-	if !uc.Hasher.CheckPassword(username, password) {
-		return nil, errors.New("invalid username or password")
+	if !uc.Hasher.CheckPassword(user.Password, password) {
+		return "", errors.New("invalid username or password - password")
 	}
 
-	return user, nil
+	token, err := uc.JWTService.GenerateToken(user.ID)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 func (uc *UserUseCase) UpdateUser(user *domain.User) error {

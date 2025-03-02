@@ -18,16 +18,17 @@ func StartServer() {
 
 	dbAdapter := db.NewGormDBAdapter(database)
 	hasher := security.NewBcryptHasher()
+	jwt := security.NewJWTService()
 
 	movieRepo := repository.NewMovieRepository(dbAdapter)
 	movieUseCase := usecase.NewMovieUseCase(movieRepo)
 	movieHandler := handler.NewMovieHandler(movieUseCase)
 
 	userRepo := repository.NewUserRepository(dbAdapter)
-	userUseCase := usecase.NewUserUseCase(userRepo, hasher)
+	userUseCase := usecase.NewUserUseCase(userRepo, hasher, jwt)
 	authHandler := handler.NewAuthHandler(userUseCase)
 
-	r := router.SetupRouter(movieHandler, authHandler)
+	r := router.SetupRouter(movieHandler, authHandler, jwt)
 
 	port := os.Getenv("SERVER_PORT")
 	if port == "" {
