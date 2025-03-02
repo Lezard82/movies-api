@@ -3,6 +3,7 @@ package db
 import (
 	"errors"
 
+	"github.com/Lezard82/movies-api/infrastructure/logger"
 	"gorm.io/gorm"
 )
 
@@ -15,6 +16,9 @@ func NewGormDBAdapter(db *gorm.DB) *GormDBAdapter {
 }
 
 func (g *GormDBAdapter) Find(dest interface{}, filters map[string]interface{}) error {
+	log := logger.GetLogger()
+	log.WithField("filters", filters).Info("Executing Find")
+
 	query := g.DB.Model(dest)
 
 	allowedFields := map[string]bool{
