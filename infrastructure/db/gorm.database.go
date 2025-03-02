@@ -1,6 +1,8 @@
 package db
 
 import (
+	"errors"
+
 	"gorm.io/gorm"
 )
 
@@ -15,7 +17,16 @@ func NewGormDBAdapter(db *gorm.DB) *GormDBAdapter {
 func (g *GormDBAdapter) Find(dest interface{}, filters map[string]interface{}) error {
 	query := g.DB.Model(dest)
 
+	allowedFields := map[string]bool{
+		"title":        true,
+		"release_date": true,
+		"genre":        true,
+	}
+
 	for field, value := range filters {
+		if !allowedFields[field] {
+			return errors.New("invalid filter field")
+		}
 		query = query.Where(field+" = ?", value)
 	}
 
