@@ -20,6 +20,10 @@ func (g *GormDBAdapter) First(dest interface{}, id int64) error {
 	return g.DB.First(dest, id).Error
 }
 
+func (g *GormDBAdapter) FirstByField(dest interface{}, field string, value interface{}) error {
+	return g.DB.Where(field+" = ?", value).First(dest).Error
+}
+
 func (g *GormDBAdapter) Create(value interface{}) error {
 	return g.DB.Create(value).Error
 }

@@ -7,6 +7,7 @@ import (
 type UserRepository interface {
 	GetAll() ([]domain.User, error)
 	GetByID(id int64) (*domain.User, error)
+	GetByUsername(username string) (*domain.User, error)
 	Create(user *domain.User) error
 	Update(user *domain.User) error
 	Delete(id int64) error

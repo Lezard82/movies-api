@@ -12,13 +12,14 @@ type MovieModel struct {
 	Title       string
 	Director    string
 	ReleaseDate time.Time
-	Cast        string `gorm:"type:TEXT"` // Almacenamos como JSON string
+	Cast        string `gorm:"type:TEXT"` // JSON string to store
 	Genre       string
 	Synopsis    string
-	UserID      int64
+	UserID      int64     `gorm:"not null;index"` // Foreign key
+	User        UserModel `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
-func FromDomain(movie domain.Movie) *MovieModel {
+func FromDomainMovie(movie domain.Movie) *MovieModel {
 	cast, _ := utils.MarshalCast(movie.Cast)
 
 	return &MovieModel{

@@ -9,6 +9,7 @@ import (
 	"github.com/Lezard82/movies-api/infrastructure/api/router"
 	"github.com/Lezard82/movies-api/infrastructure/db"
 	"github.com/Lezard82/movies-api/infrastructure/repository"
+	"github.com/Lezard82/movies-api/infrastructure/security"
 	"github.com/Lezard82/movies-api/internal/usecase"
 )
 
@@ -16,10 +17,17 @@ func StartServer() {
 	database := db.InitDB()
 
 	dbAdapter := db.NewGormDBAdapter(database)
+	hasher := security.NewBcryptHasher()
+
 	movieRepo := repository.NewMovieRepository(dbAdapter)
 	movieUseCase := usecase.NewMovieUseCase(movieRepo)
 	movieHandler := handler.NewMovieHandler(movieUseCase)
-	r := router.SetupRouter(movieHandler)
+
+	userRepo := repository.NewUserRepository(dbAdapter)
+	userUseCase := usecase.NewUserUseCase(userRepo, hasher)
+	authHandler := handler.NewAuthHandler(userUseCase)
+
+	r := router.SetupRouter(movieHandler, authHandler)
 
 	port := os.Getenv("SERVER_PORT")
 	if port == "" {

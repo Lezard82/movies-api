@@ -39,7 +39,7 @@ func (r *MovieRepositoryImpl) GetByID(id int64) (*domain.Movie, error) {
 }
 
 func (r *MovieRepositoryImpl) Create(movie *domain.Movie) error {
-	movieModel := models.FromDomain(*movie)
+	movieModel := models.FromDomainMovie(*movie)
 
 	if err := r.database.Create(movieModel); err != nil {
 		return err
@@ -49,7 +49,7 @@ func (r *MovieRepositoryImpl) Create(movie *domain.Movie) error {
 }
 
 func (r *MovieRepositoryImpl) Update(movie *domain.Movie) error {
-	movieModel := models.FromDomain(*movie)
+	movieModel := models.FromDomainMovie(*movie)
 
 	if err := r.database.Save(movieModel); err != nil {
 		return err

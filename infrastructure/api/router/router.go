@@ -5,11 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(movieHandler *handler.MovieHandler) *gin.Engine {
+func SetupRouter(movieHandler *handler.MovieHandler, authHandler *handler.AuthHandler) *gin.Engine {
 	r := gin.Default()
 
 	SetupMoviesRoutes(r, movieHandler)
-	//users.SetpUserRoutes(r, userUseCase)
+	SetupAuthRouter(r, authHandler)
 
 	return r
 }
