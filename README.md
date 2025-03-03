@@ -89,22 +89,33 @@ This will start the application and a MySQL database container. The MySQL databa
     ```bash
     go run main.go
     ```
+
 The API will be available at `http://localhost:8080`.
     
 ## Docker Configuration
 
 The project includes a `docker-compose.yml` file to easily manage the database and application environment.
+
+## Database Migrations
+
+The project includes a migrations folder with a migrate.go script. After installing the database, execute this script:
+
+    ```bash
+    go run ./migrations/migrate.go
+    ```
+
 ## API Documentation
 
 The API is documented with Swagger. After running the application, you can access the Swagger UI by navigating to:
 
 http://localhost:8080/docs
+
 ## Testing
 
 To run tests, use the following command:
 
     ```bash
-    go test ./tests...
+    go test ./...
     ```
 ## License
 
